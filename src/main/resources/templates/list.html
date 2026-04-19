@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список книг</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- Информация о пользователе -->
+    <div class="alert alert-info d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <strong>Пользователь:</strong>
+            <span sec:authentication="name"></span>
+            <span class="ms-3"><strong>Роль:</strong>
+            <span sec:authentication="authorities[0]"></span></span>
+            <span class="ms-3"><small class="text-muted">Вход: <span th:text="${#dates.format(currentTime, 'dd.MM.yyyy HH:mm')}"></span></small></span>
+        </div>
+        <div>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-danger">
+                    🚪 Выход
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Список книг</h1>
+        <div sec:authorize="hasAnyRole('EDITOR', 'ADMIN')">
+            <a href="/books/add" class="btn btn-primary">Добавить книгу</a>
+        </div>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Год издания</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.id}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.publicationYear}"></td>
+            <td>
+                <div class="d-flex gap-2">
+                    <a sec:authorize="hasAnyRole('EDITOR', 'ADMIN')"
+                       th:href="@{/books/edit/{id}(id=${book.id})}"
+                       class="btn btn-warning">Редактировать</a>
+
+                    <form sec:authorize="hasRole('ADMIN')"
+                          th:action="@{/books/delete/{id}(id=${book.id})}"
+                          method="post">
+                        <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Вы уверены, что хотите удалить эту книгу?')">Удалить</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
