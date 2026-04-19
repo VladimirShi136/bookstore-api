@@ -19,6 +19,10 @@
         }
         .table tbody td {
             vertical-align: middle;
+            text-align: center;
+        }
+        .table thead th {
+            text-align: center;
         }
     </style>
 </head>
@@ -66,7 +70,7 @@
             <td th:text="${book.publicationYear}"></td>
             <td th:text="${book.owner != null ? book.owner.username : 'Нет владельца'}"></td>
             <td>
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 justify-content-center">
                     <a th:href="@{/books/edit/{id}(id=${book.id})}" class="btn btn-warning">Редактировать</a>
                     <form th:action="@{/books/delete/{id}(id=${book.id})}" method="post">
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Удалить книгу?')">Удалить</button>

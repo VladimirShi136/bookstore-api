@@ -23,6 +23,10 @@
         }
         .table tbody td {
             vertical-align: middle;
+            text-align: center;
+        }
+        .table thead th {
+            text-align: center;
         }
     </style>
 </head>
@@ -82,7 +86,7 @@
             <td th:text="${book.publicationYear}"></td>
             <td th:text="${book.owner != null ? book.owner.username : 'Нет владельца'}"></td>
             <td>
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 justify-content-center">
                     <!-- Редактировать: владелец или EDITOR/ADMIN -->
                     <a th:if="${book.owner != null && book.owner.username == #authentication.name
                            || #authorization.expression('hasAnyRole(''EDITOR'',''ADMIN'')')}"
